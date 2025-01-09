@@ -45,8 +45,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: AI Code Review
-        uses: amitsingh-007/openai-gpt3-action@v1
+        uses: openai/openai-action@v1
         with:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          open_ai_model: gpt-3.5-turbo
-          with-comment: true
+          api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: "gpt-3.5-turbo"
+          input: "Please review the code changes in this PR"
