@@ -7,10 +7,18 @@ on:
 
 jobs:
   lint-format-test:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v14
+        uses: actions/checkout@v4
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -18,7 +26,7 @@ jobs:
           node-version: '18.x'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run linter
         run: npm run lint
@@ -28,3 +36,25 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  ai-code-review:
+    runs-on: ubuntu-latest
+    needs: lint-format-test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for AI review
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies for AI review
+        run: npm install axios
+
+      - name: AI Code Review
+        uses: aidar-freeed/ai-codereviewer@v1.0.0
+        with:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          open_ai_model: gpt-3.5-turbo
+          with-comment: true
