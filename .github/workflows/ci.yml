@@ -48,5 +48,5 @@ jobs:
         uses: openai/openai-action@v1
         with:
           api-key: ${{ secrets.OPENAI_API_KEY }}
-          model: "gpt-3.5-turbo"
-          input: "Please review the code changes in this PR"
+          model: 'gpt-3.5-turbo'
+          input: 'Please review the code changes in this PR'
